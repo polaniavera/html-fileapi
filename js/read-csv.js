@@ -60,24 +60,28 @@ function drawOutput(lines){
 
 function formatArray(arr){
 	var objectMain = [];
+
 	//Get current date and time
 	var date = formatDate();
 	var time = formatTime();
 
-	for(i = 1; i < arr.length-1; i++){
+	for(i = 0; i < arr.length-1; i++){
 		var objectSingle = { };
 		objectSingle.Latitud = 9.99999;
 		objectSingle.Longitud = -74.44444;
-		objectSingle.TanqueConductor = parseFloat(arr[i][0]);
-		objectSingle.TanquePasajero = parseFloat(arr[i][1]);
+		objectSingle.TanqueConductor = arr[i][0];
+		objectSingle.TanquePasajero = arr[i][1];
 		objectSingle.BotonPanico = true;
-		objectSingle.Velocidad = parseFloat(arr[i][2]);
+		objectSingle.Velocidad = arr[i][2];
 		objectSingle.Fecha = date;
 		objectSingle.Hora = time;
 		objectSingle.IdUsuario = 1;
 		objectSingle.IdItem = 1;
 
 		objectMain.push(objectSingle);
+
+		//Aumenta cinco minutos por bucle
+		time = newTime(time);
 	}
 	return objectMain;
 }
@@ -107,9 +111,16 @@ function formatTime(){
 }
 
 function newTime(oldTime){
-	var hh = oldTime.getHours();  
-    var min = oldTime.getMinutes();
-	var ss = oldTime.getSeconds();
-	oldTime = hh + ':' + min + ':' + ss;
-	return hour.toString();
+	var parts = oldTime.split(':');
+	var reserv = new Date('2018','01','01',parts[0], parts[1], parts[2]);
+	//Cambiar la constante por la cantidad de minutos a adicionar
+	var diff = 5;
+	var newDateObj = new Date(reserv.getTime() + diff*60000);
+	var newHour = new Date();
+	var newHh = newDateObj.getHours(); 
+	var newMin = newDateObj.getMinutes();
+	var newSs = newDateObj.getSeconds();
+	newHour = newHh + ':' + newMin + ':' + newSs;
+	
+	return newHour.toString();
 }
